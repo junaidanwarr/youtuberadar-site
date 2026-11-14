@@ -1,0 +1,29 @@
+{
+  "title": "Example Niche Title",
+  "category": "history",
+  "status": "published",
+  "researchDate": "2026-11-10",
+  "summary": "One sentence, up to 220 characters, shown on the card and as the page description.",
+  "intro": "A short paragraph introducing the niche and its angle.",
+  "order": 1,
+  "sources": [
+    { "label": "Publisher — Title of the page or report", "url": "https://example.com/report", "checked": "2026-11-10" },
+    { "label": "YouTube Help — YouTube Partner Program overview & eligibility", "url": "https://support.google.com/youtube/answer/72851", "checked": "2026-11-10" }
+  ],
+  "sections": [
+    {
+      "id": "market",
+      "statements": [
+        { "text": "A fact you checked against source 0 on the research date.", "evidence": "verified", "source": 0 },
+        { "text": "A figure you derived, with the method stated in the sentence.", "evidence": "estimate", "source": 0 }
+      ]
+    },
+    { "id": "audience", "statements": [{ "text": "Your qualitative read of who watches this.", "evidence": "editorial" }] },
+    { "id": "subniches", "statements": [{ "text": "A sub-niche angle.", "evidence": "editorial" }] },
+    { "id": "ideas", "statements": [{ "text": "A content idea.", "evidence": "editorial" }] },
+    { "id": "formats", "statements": [{ "text": "A format recommendation.", "evidence": "editorial" }] },
+    { "id": "competition", "statements": [{ "text": "Not sampled yet.", "evidence": "pending" }] },
+    { "id": "monetization", "statements": [{ "text": "Eligibility rules are set by YouTube; see the source.", "evidence": "verified", "source": 1 }] }
+  ],
+  "relatedTemplates": ["example-template"]
+}

@@ -7,13 +7,20 @@ import type { Template } from '../data/types';
 interface Props {
   kind: Template['preview'];
   hue: number;
+  image?: string;
+  alt?: string;
 }
-const { kind, hue } = Astro.props;
+const { kind, hue, image, alt = '' } = Astro.props;
 const c = `hsl(${hue} 90% 68%)`;
 const c2 = `hsl(${(hue + 40) % 360} 85% 72%)`;
 ---
 
-<div class="tprev" style={`--c:${c}; --c2:${c2}`} aria-hidden="true">
+{image && (
+  <div class="tprev">
+    <img src={image} alt={alt} loading="lazy" decoding="async" />
+  </div>
+)}
+<div class="tprev" style={`--c:${c}; --c2:${c2}; ${image ? 'display:none' : ''}`} aria-hidden="true">
   <svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
     <defs>
       <radialGradient id={`g-${kind}-${hue}`} cx="30%" cy="20%" r="90%">
@@ -147,9 +154,13 @@ const c2 = `hsl(${(hue + 40) % 360} 85% 72%)`;
     border: 1px solid var(--line);
     background: #070912;
   }
-  .tprev svg {
+  .tprev svg,
+  .tprev img {
     width: 100%;
     height: 100%;
+  }
+  .tprev img {
+    object-fit: cover;
   }
   .tprev__tag {
     position: absolute;

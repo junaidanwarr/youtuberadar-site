@@ -1,0 +1,14 @@
+{
+  "name": "Example Template",
+  "status": "published",
+  "description": "What the template is and what it does, up to 600 characters.",
+  "categories": ["history", "documentary"],
+  "format": "Long-form",
+  "style": "Archival",
+  "intendedUse": "Photo and footage treatment",
+  "software": ["Adobe Premiere Pro", "DaVinci Resolve"],
+  "includes": ["Photo frames", "Credit line"],
+  "fileFormats": [".prproj", ".drp"],
+  "image": "https://example.com/previews/example-template.jpg",
+  "order": 1
+}

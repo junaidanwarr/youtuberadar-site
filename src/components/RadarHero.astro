@@ -77,7 +77,7 @@ const liveNiches = niches.length - demoNiches;
       </div>
       <div>
         <dt>Editing templates</dt>
-        <dd>{templates.length} <small>demo</small></dd>
+        <dd>{templates.length} {templates.every((t) => t.status === 'demo') && <small>demo</small>}</dd>
       </div>
       <div class="hero__hud-model">
         <dt>Model</dt>

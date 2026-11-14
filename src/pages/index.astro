@@ -8,6 +8,9 @@ import { niches } from '../data/niches';
 import { templates } from '../data/templates';
 
 const countFor = (slug: string) => niches.filter((n) => n.category === slug).length;
+const allDemo = niches.every((n) => n.status === 'demo');
+const numberWords = ['Zero','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen','Twenty'];
+const catCount = numberWords[categories.length] ?? String(categories.length);
 const featuredTemplates = templates.slice(0, 3);
 
 const pillars = [
@@ -89,7 +92,7 @@ const schema = {
       <div class="section-head section-head--row reveal">
         <div>
           <span class="eyebrow">Explore niches</span>
-          <h2 id="cats-title">Fifteen categories. One standard.</h2>
+          <h2 id="cats-title">{catCount} categories. One standard.</h2>
         </div>
         <a class="btn btn--ghost" href="/niches/">All premium niches <span class="arrow" aria-hidden="true">→</span></a>
       </div>
@@ -106,7 +109,7 @@ const schema = {
                   <span class="cat__name">{c.name}</span>
                   <span class="cat__desc">{c.description}</span>
                   <span class="cat__foot">
-                    <span class="mono">{n > 0 ? `${n} demo record${n > 1 ? 's' : ''}` : 'In research'}</span>
+                    <span class="mono">{n > 0 ? `${n} ${allDemo ? 'demo record' : 'niche'}${n > 1 ? 's' : ''}` : 'In research'}</span>
                     <span class="cat__go">Explore <Glyph name="arrow" size={15} /></span>
                   </span>
                 </a>

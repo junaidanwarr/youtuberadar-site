@@ -1,4 +1,5 @@
 import type { Niche, NicheSection, Source, Statement } from './types';
+import { pushedNiches, pushedTemplates } from './load';
 
 /**
  * NICHE RECORDS
@@ -122,7 +123,7 @@ function demoNiche(d: DemoInput): Niche {
   };
 }
 
-export const niches: Niche[] = [
+const demoNiches: Niche[] = [
   demoNiche({
     slug: 'sleep-science-explainers',
     title: 'Sleep Science Explainers',
@@ -464,5 +465,17 @@ export const niches: Niche[] = [
     relatedTemplates: ['archive-documentary-kit', 'map-route-animator', 'cinematic-title-sequences'],
   }),
 ];
+
+/**
+ * Records pushed into /content/niches replace the demo set entirely.
+ * Related-template links that point at a template that does not exist are dropped.
+ */
+const knownTemplates = new Set(pushedTemplates.map((t) => t.slug));
+export const niches: Niche[] = pushedNiches.length
+  ? pushedNiches.map((n) => ({
+      ...n,
+      relatedTemplates: pushedTemplates.length ? n.relatedTemplates.filter((s) => knownTemplates.has(s)) : n.relatedTemplates,
+    }))
+  : demoNiches;
 
 export const nicheBySlug = (slug: string) => niches.find((n) => n.slug === slug);

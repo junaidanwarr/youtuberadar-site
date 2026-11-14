@@ -86,6 +86,8 @@ export interface Template {
   fileFormats: string[];
   status: RecordStatus;
   /** Visual preset for the generated preview. */
+  /** Real preview image: an https:// URL or a site path. Replaces the drawn illustration. */
+  image?: string;
   preview: 'timeline' | 'lowerthird' | 'map' | 'docu' | 'counter' | 'split' | 'caption' | 'chart' | 'title';
   hue: number;
   order: number;

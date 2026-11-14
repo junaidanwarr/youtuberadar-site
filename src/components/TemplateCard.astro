@@ -21,7 +21,7 @@ const { template: t, i = 0 } = Astro.props;
   data-order={t.order}
   data-search={`${t.name} ${t.description} ${t.style} ${t.intendedUse} ${t.software.join(' ')}`.toLowerCase()}
 >
-  <TemplatePreview kind={t.preview} hue={t.hue} />
+  <TemplatePreview kind={t.preview} hue={t.hue} image={t.image} alt={`${t.name} preview`} />
   <div class="tcard__body">
     <div class="tcard__meta">
       <span class="mono">{t.style} · {t.format}</span>

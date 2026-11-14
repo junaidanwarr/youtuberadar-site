@@ -1,4 +1,5 @@
 import type { Template } from './types';
+import { pushedTemplates } from './load';
 
 /**
  * TEMPLATE RECORDS
@@ -14,7 +15,7 @@ const t = (x: Omit<Template, 'status' | 'order'>, i: number): Template => ({
   order: i,
 });
 
-export const templates: Template[] = [
+const demoTemplates: Template[] = [
   {
     slug: 'case-file-timeline',
     name: 'Case File Timeline',
@@ -166,6 +167,9 @@ export const templates: Template[] = [
     hue: 330,
   },
 ].map(t);
+
+/** Records pushed into /content/templates replace the demo set entirely. */
+export const templates: Template[] = pushedTemplates.length ? pushedTemplates : demoTemplates;
 
 export const templateBySlug = (slug: string) => templates.find((x) => x.slug === slug);
 
