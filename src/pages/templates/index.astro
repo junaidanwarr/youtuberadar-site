@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import TemplateCard from '../../components/TemplateCard.astro';
+import CatalogBar from '../../components/CatalogBar.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import Notice from '../../components/Notice.astro';
+import { templates, allSoftware } from '../../data/templates';
+
+const allDemo = templates.every((t) => t.status === 'demo');
+const sorted = [...templates].sort((a, b) => a.order - b.order);
+---
+
+<Base
+  title="Professional Editing Templates"
+  description="A library of editing template systems for YouTube: timelines, lower thirds, charts, maps and titles, organised by category, format, style and software."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Templates</span>
+      </nav>
+      <h1>Editing <span class="grad">templates</span></h1>
+      <p class="lede">
+        Template systems built around how research-led videos are actually cut. Filter by category,
+        format or the software you edit in.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap" data-catalog data-noun="template" style="padding-bottom: 80px">
+    {
+      allDemo && (
+        <div style="margin-bottom: 20px">
+          <Notice>
+            <strong>Demonstration library.</strong> These entries describe the planned template range.
+            Previews are illustrations, not screenshots, and software compatibility, included assets and
+            file formats are indicative until each template is published.
+          </Notice>
+        </div>
+      )
+    }
+
+    <CatalogBar
+      placeholder="Search templates, e.g. “timeline” or “captions”"
+      selects={[
+        { key: 'software', label: 'Software', options: allSoftware },
+        { key: 'format', label: 'Format', options: ['Long-form', 'Shorts', 'Both'] },
+      ]}
+    />
+
+    <div class="card-grid" data-grid>
+      {sorted.map((t, i) => <TemplateCard template={t} i={i} />)}
+    </div>
+
+    <EmptyState title="No template matches those filters">
+      Try a different software or category, or clear the filters to see the whole library.
+    </EmptyState>
+  </section>
+
+  <script>
+    import '../../scripts/catalog.ts';
+  </script>
+</Base>

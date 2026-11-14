@@ -1,0 +1,110 @@
+---
+import Glyph from './Glyph.astro';
+import { categories } from '../data/categories';
+
+interface Props {
+  placeholder: string;
+  /** Extra <select> filters: key matches the item's data-<key>. */
+  selects?: { key: string; label: string; options: string[] }[];
+}
+const { placeholder, selects = [] } = Astro.props;
+---
+
+<div class="cbar glass">
+  <div class="cbar__row">
+    <label class="field cbar__search">
+      <span class="visually-hidden">Search</span>
+      <Glyph name="search" size={18} />
+      <input type="search" data-q placeholder={placeholder} autocomplete="off" />
+    </label>
+
+    {
+      selects.map((s) => (
+        <label class="field">
+          <span class="visually-hidden">{s.label}</span>
+          <select data-filter={s.key}>
+            <option value="">{s.label}: All</option>
+            {s.options.map((o) => (
+              <option value={o}>{o}</option>
+            ))}
+          </select>
+        </label>
+      ))
+    }
+
+    <label class="field">
+      <span class="visually-hidden">Sort</span>
+      <select data-sort>
+        <option value="order">Sort: Editor’s order</option>
+        <option value="az">Sort: A to Z</option>
+        <option value="za">Sort: Z to A</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="chips" data-filter="category" role="group" aria-label="Filter by category">
+    <button type="button" class="chip" data-value="" aria-pressed="true">All categories</button>
+    {
+      categories.map((c) => (
+        <button type="button" class="chip" data-value={c.slug} aria-pressed="false">
+          {c.name}
+        </button>
+      ))
+    }
+  </div>
+
+  <div class="cbar__status">
+    <span class="mono" data-count aria-live="polite"></span>
+    <button type="button" class="textlink cbar__reset" data-reset>Clear filters</button>
+  </div>
+</div>
+
+<style>
+  .cbar {
+    display: grid;
+    gap: 16px;
+    padding: 18px;
+    margin-bottom: 28px;
+  }
+  .cbar__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .cbar__search {
+    flex: 1 1 280px;
+  }
+  .cbar__row .field:not(.cbar__search) {
+    flex: 0 1 220px;
+  }
+  .cbar__status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--muted);
+    min-height: 24px;
+  }
+  .cbar__reset {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid rgba(240, 170, 255, 0.35);
+    padding: 0;
+    cursor: pointer;
+    font-size: 0.86rem;
+  }
+  @media (max-width: 640px) {
+    .chips {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      margin-inline: -18px;
+      padding-inline: 18px;
+      scrollbar-width: none;
+    }
+    .chips .chip {
+      flex: none;
+    }
+    .cbar__row .field:not(.cbar__search) {
+      flex: 1 1 140px;
+    }
+  }
+</style>

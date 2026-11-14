@@ -1,0 +1,41 @@
+---
+const rows = [
+  ['verified', 'Verified', 'Checked against a cited source on the research date.'],
+  ['estimate', 'Estimate', 'Derived from data with the method stated. Not an exact figure.'],
+  ['editorial', 'Editorial', 'Our qualitative assessment. An opinion, not a measurement.'],
+  ['pending', 'Pending', 'Not researched yet. No claim is being made.'],
+];
+---
+
+<dl class="legend">
+  {
+    rows.map(([k, label, text]) => (
+      <div>
+        <dt>
+          <span class={`ev ev--${k}`}>{label}</span>
+        </dt>
+        <dd>{text}</dd>
+      </div>
+    ))
+  }
+</dl>
+
+<style>
+  .legend {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+  }
+  .legend div {
+    display: grid;
+    grid-template-columns: 104px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .legend dd {
+    margin: 0;
+    font-size: 0.86rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+</style>

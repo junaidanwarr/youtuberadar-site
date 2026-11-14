@@ -1,0 +1,130 @@
+---
+import type { Niche } from '../data/types';
+import { categoryBySlug } from '../data/categories';
+import Glyph from './Glyph.astro';
+
+interface Props {
+  niche: Niche;
+  i?: number;
+}
+const { niche, i = 0 } = Astro.props;
+const cat = categoryBySlug(niche.category)!;
+const subCount = niche.sections.find((s) => s.id === 'subniches')?.statements.length ?? 0;
+const ideaCount = niche.sections.find((s) => s.id === 'ideas')?.statements.length ?? 0;
+---
+
+<article
+  class="ncard glass tilt reveal"
+  style={`--hue:${cat.hue}; --i:${i % 6}`}
+  data-item
+  data-category={niche.category}
+  data-title={niche.title.toLowerCase()}
+  data-order={niche.order}
+  data-search={`${niche.title} ${niche.summary} ${cat.name}`.toLowerCase()}
+>
+  <header class="ncard__top">
+    <span class="ncard__cat"><Glyph name={cat.glyph} size={16} />{cat.name}</span>
+    {
+      niche.status === 'demo' ? (
+        <span class="pill pill--demo">
+          <span class="dot" />
+          Demo record
+        </span>
+      ) : (
+        <span class="pill">
+          <span class="dot" />
+          Researched {niche.researchDate}
+        </span>
+      )
+    }
+  </header>
+
+  <h3><a href={`/niches/${niche.slug}/`}>{niche.title}</a></h3>
+  <p class="ncard__sum">{niche.summary}</p>
+
+  <footer class="ncard__foot">
+    <span class="mono muted">{subCount} sub-niches · {ideaCount} content ideas</span>
+    <span class="ncard__go" aria-hidden="true">View <Glyph name="arrow" size={16} /></span>
+  </footer>
+</article>
+
+<style>
+  .ncard {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 24px;
+    min-height: 250px;
+    border-radius: var(--radius-lg);
+    transition:
+      transform 0.5s var(--ease),
+      border-color 0.3s;
+  }
+  .ncard::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsla(var(--hue), 90%, 70%, 0.7), transparent);
+    opacity: 0.5;
+  }
+  .ncard:hover,
+  .ncard:focus-within {
+    border-color: hsla(var(--hue), 80%, 70%, 0.4);
+  }
+  .ncard__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .ncard__cat {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: hsl(var(--hue), 85%, 76%);
+  }
+  .ncard h3 {
+    font-size: 1.4rem;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+  /* whole card is the click target */
+  .ncard h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+  .ncard__sum {
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .ncard__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+  }
+  .ncard__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: var(--accent-hi);
+    transition: gap 0.3s var(--ease);
+  }
+  .ncard:hover .ncard__go {
+    gap: 10px;
+  }
+</style>

@@ -1,0 +1,101 @@
+---
+import type { Template } from '../data/types';
+import TemplatePreview from './TemplatePreview.astro';
+
+interface Props {
+  template: Template;
+  i?: number;
+}
+const { template: t, i = 0 } = Astro.props;
+---
+
+<article
+  class="tcard glass tilt reveal"
+  data-tilt="5"
+  style={`--hue:${t.hue}; --i:${i % 6}`}
+  data-item
+  data-category={t.categories.join(' ')}
+  data-software={t.software.join('|')}
+  data-format={t.format}
+  data-title={t.name.toLowerCase()}
+  data-order={t.order}
+  data-search={`${t.name} ${t.description} ${t.style} ${t.intendedUse} ${t.software.join(' ')}`.toLowerCase()}
+>
+  <TemplatePreview kind={t.preview} hue={t.hue} />
+  <div class="tcard__body">
+    <div class="tcard__meta">
+      <span class="mono">{t.style} · {t.format}</span>
+      {t.status === 'demo' && <span class="pill pill--demo"><span class="dot" />Demo</span>}
+    </div>
+    <h3><a href={`/templates/${t.slug}/`}>{t.name}</a></h3>
+    <p>{t.intendedUse}</p>
+    <ul class="tcard__sw" aria-label="Planned software compatibility">
+      {t.software.map((s) => <li>{s}</li>)}
+    </ul>
+  </div>
+</article>
+
+<style>
+  .tcard {
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-radius: var(--radius-lg);
+    transition:
+      transform 0.5s var(--ease),
+      border-color 0.3s;
+  }
+  .tcard:hover,
+  .tcard:focus-within {
+    border-color: hsla(var(--hue), 80%, 70%, 0.4);
+  }
+  .tcard__body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 18px 12px 12px;
+    flex: 1;
+  }
+  .tcard__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    color: hsl(var(--hue), 85%, 76%);
+    text-transform: uppercase;
+  }
+  .tcard__meta .mono {
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+  }
+  .tcard h3 {
+    font-size: 1.25rem;
+    font-weight: 400;
+  }
+  .tcard h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    border-radius: inherit;
+  }
+  .tcard p {
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  .tcard__sw {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+  .tcard__sw li {
+    padding: 3px 10px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--line);
+    font-size: 0.74rem;
+    color: var(--ink-soft);
+  }
+</style>

@@ -1,0 +1,558 @@
+---
+import Base from '../layouts/Base.astro';
+import RadarHero from '../components/RadarHero.astro';
+import Glyph from '../components/Glyph.astro';
+import TemplateCard from '../components/TemplateCard.astro';
+import { categories } from '../data/categories';
+import { niches } from '../data/niches';
+import { templates } from '../data/templates';
+
+const countFor = (slug: string) => niches.filter((n) => n.category === slug).length;
+const featuredTemplates = templates.slice(0, 3);
+
+const pillars = [
+  {
+    glyph: 'target',
+    title: 'Curated Premium Niches',
+    body: 'A deliberately small library. Each niche is chosen, framed and broken into sub-niches, formats and content ideas, so you start with direction instead of a list of keywords.',
+  },
+  {
+    glyph: 'doc',
+    title: 'Quality-Focused Research',
+    body: 'Every statement is tagged as verified, estimated, editorial or pending. Sources and research dates travel with the record. Where evidence is thin, the page says so.',
+  },
+  {
+    glyph: 'layers',
+    title: 'Professional Editing Templates',
+    body: 'Timelines, lower thirds, charts, maps and title systems organised by category, format and software, and matched to the niches they suit.',
+  },
+];
+
+const steps = [
+  { n: '01', title: 'Discover', body: 'Explore carefully curated YouTube niches.' },
+  { n: '02', title: 'Access', body: 'Obtain the premium niche resources and editing templates you choose.' },
+  { n: '03', title: 'Execute', body: 'Independently build and develop your content strategy.' },
+];
+
+const compare = [
+  ['Starts from a trending keyword or a hunch', 'Starts from a defined niche with a stated angle'],
+  ['Numbers with no source or date', 'Sources and a research date on every record'],
+  ['Estimates presented as facts', 'Verified, estimated and editorial statements kept apart'],
+  ['One-line idea, no structure', 'Sub-niches, formats and content ideas laid out'],
+  ['Editing style worked out from scratch', 'Templates matched to the niche'],
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'YouTube Radar',
+  url: 'https://youtuberadar.com/',
+  description: 'Premium YouTube niches and professional editing templates for independent creators.',
+};
+---
+
+<Base
+  title="YouTube Radar — Premium YouTube Niches & Editing Templates"
+  description="Explore premium YouTube niches backed by meaningful research, and professional editing templates designed to help you execute your content vision."
+  schema={schema}
+>
+  <RadarHero />
+
+  <!-- Value proposition -->
+  <section class="section" aria-labelledby="value-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Why it exists</span>
+        <h2 id="value-title">Less Guesswork. <span class="grad">Better Opportunities.</span></h2>
+        <p class="lede">We bring clarity to your next YouTube opportunity.</p>
+      </div>
+      <div class="pillars">
+        {
+          pillars.map((p, i) => (
+            <article class="pillar glass tilt reveal" style={`--i:${i}`} data-tilt="5">
+              <span class="pillar__n mono">0{i + 1}</span>
+              <span class="pillar__icon">
+                <Glyph name={p.glyph} size={26} />
+              </span>
+              <h3>{p.title}</h3>
+              <p>{p.body}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Niche categories -->
+  <section class="section" aria-labelledby="cats-title">
+    <div class="wrap">
+      <div class="section-head section-head--row reveal">
+        <div>
+          <span class="eyebrow">Explore niches</span>
+          <h2 id="cats-title">Fifteen categories. One standard.</h2>
+        </div>
+        <a class="btn btn--ghost" href="/niches/">All premium niches <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <ul class="cats">
+        {
+          categories.map((c, i) => {
+            const n = countFor(c.slug);
+            return (
+              <li class="reveal" style={`--i:${i % 5}`}>
+                <a class="cat tilt" href={`/niches/?category=${c.slug}`} style={`--hue:${c.hue}`} data-tilt="10">
+                  <span class="cat__orb" aria-hidden="true">
+                    <Glyph name={c.glyph} size={26} />
+                  </span>
+                  <span class="cat__name">{c.name}</span>
+                  <span class="cat__desc">{c.description}</span>
+                  <span class="cat__foot">
+                    <span class="mono">{n > 0 ? `${n} demo record${n > 1 ? 's' : ''}` : 'In research'}</span>
+                    <span class="cat__go">Explore <Glyph name="arrow" size={15} /></span>
+                  </span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- Templates preview -->
+  <section class="section" aria-labelledby="tpl-title">
+    <div class="wrap">
+      <div class="section-head section-head--row reveal">
+        <div>
+          <span class="eyebrow">Editing templates</span>
+          <h2 id="tpl-title">Built for the edit, not the pitch deck.</h2>
+          <p class="lede">
+            A library of template systems organised by category, format, style and software.
+          </p>
+        </div>
+        <a class="btn btn--ghost" href="/templates/">Discover editing templates <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <div class="card-grid">
+        {featuredTemplates.map((t, i) => <TemplateCard template={t} i={i} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">How it works</span>
+        <h2 id="how-title">Three steps. The third one is yours.</h2>
+      </div>
+      <ol class="steps">
+        {
+          steps.map((s, i) => (
+            <li class="step reveal" style={`--i:${i}`}>
+              <span class="step__n">{s.n}</span>
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <p class="model reveal">
+        YouTube Radar is self-service. There is no coaching, production, channel management or support
+        desk behind the resources. <a class="textlink" href="/faq/">Read exactly what is and is not included</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- Why -->
+  <section class="section" aria-labelledby="why-title">
+    <div class="wrap why">
+      <div class="reveal">
+        <span class="eyebrow">Why YouTube Radar?</span>
+        <h2 id="why-title">Random selection or research-driven discovery.</h2>
+        <p class="lede">
+          Most niche advice is a list of topics and a number nobody can trace. We would rather give you
+          fewer niches, organised properly, with the evidence labelled.
+        </p>
+        <a class="btn btn--ghost" href="/about/#standards">Our research standards <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+      <div class="cmp glass reveal" role="table" aria-label="Random niche selection compared with research-driven discovery">
+        <div class="cmp__row cmp__head" role="row">
+          <span role="columnheader">Random selection</span>
+          <span role="columnheader">YouTube Radar</span>
+        </div>
+        {
+          compare.map(([a, b]) => (
+            <div class="cmp__row" role="row">
+              <span role="cell" class="cmp__no"><Glyph name="cross" size={16} />{a}</span>
+              <span role="cell" class="cmp__yes"><Glyph name="check" size={16} />{b}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="section final" aria-labelledby="final-title">
+    <div class="wrap">
+      <div class="final__box glass reveal">
+        <div class="final__rings" aria-hidden="true"></div>
+        <span class="eyebrow">Ready when you are</span>
+        <h2 id="final-title">Your Next Content Opportunity Starts Here.</h2>
+        <p class="lede">We provide the research-driven resources. You take control of execution.</p>
+        <a class="btn btn--primary" href="/niches/">Explore YouTube Radar <span class="arrow" aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .section-head--row {
+    max-width: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .section-head--row > div {
+    display: grid;
+    gap: 18px;
+    max-width: 720px;
+  }
+
+  /* Pillars */
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .pillar {
+    padding: 30px 28px 34px;
+    display: grid;
+    gap: 14px;
+    align-content: start;
+  }
+  .pillar__n {
+    position: absolute;
+    right: 24px;
+    top: 22px;
+    color: var(--faint);
+  }
+  .pillar__icon {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    color: var(--accent-hi);
+    background: linear-gradient(160deg, rgba(214, 70, 255, 0.22), rgba(255, 45, 85, 0.1));
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 8px 26px rgba(214, 70, 255, 0.18);
+    transform: translateZ(30px);
+  }
+  .pillar h3 {
+    font-size: 1.35rem;
+    font-weight: 400;
+    margin-top: 6px;
+  }
+  .pillar p {
+    color: var(--muted);
+  }
+
+  /* Category cards */
+  .cats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  .cat {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    min-height: 236px;
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background:
+      radial-gradient(120% 70% at 50% -10%, hsla(var(--hue), 90%, 60%, 0.16), transparent 70%),
+      linear-gradient(180deg, rgba(18, 22, 39, 0.8), rgba(8, 10, 18, 0.8));
+    transition:
+      transform 0.5s var(--ease),
+      border-color 0.3s,
+      box-shadow 0.4s;
+  }
+  .cat:hover,
+  .cat:focus-visible {
+    border-color: hsla(var(--hue), 85%, 70%, 0.55);
+    box-shadow: 0 24px 60px -20px hsla(var(--hue), 90%, 55%, 0.45);
+  }
+  .cat__orb {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    color: hsl(var(--hue), 95%, 82%);
+    background: radial-gradient(circle at 32% 28%, hsla(var(--hue), 95%, 72%, 0.55), hsla(var(--hue), 80%, 30%, 0.25) 60%, transparent 72%);
+    border: 1px solid hsla(var(--hue), 90%, 75%, 0.35);
+    box-shadow:
+      inset 0 0 14px hsla(var(--hue), 95%, 70%, 0.25),
+      0 10px 30px -8px hsla(var(--hue), 90%, 55%, 0.6);
+    transform: translateZ(40px);
+    transition: transform 0.5s var(--ease);
+  }
+  .cat:hover .cat__orb {
+    transform: translateZ(60px) scale(1.06);
+  }
+  .cat__name {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: -0.02em;
+    margin-top: 8px;
+    transform: translateZ(22px);
+  }
+  .cat__desc {
+    color: var(--muted);
+    font-size: 0.86rem;
+    line-height: 1.5;
+  }
+  .cat__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 12px;
+    color: var(--faint);
+  }
+  .cat__foot .mono {
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .cat__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: hsl(var(--hue), 90%, 78%);
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity 0.3s,
+      transform 0.3s var(--ease);
+  }
+  .cat:hover .cat__go,
+  .cat:focus-visible .cat__go {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Steps */
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line-strong);
+  }
+  .step {
+    position: relative;
+    padding: 34px 32px 10px 0;
+  }
+  .step + .step {
+    padding-left: 32px;
+    border-left: 1px solid var(--line);
+  }
+  .step::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent-hi);
+    box-shadow: 0 0 14px var(--accent);
+  }
+  .step + .step::before {
+    left: -5px;
+  }
+  .step__n {
+    font-family: var(--font-display);
+    font-weight: 200;
+    font-size: clamp(3rem, 6vw, 4.6rem);
+    line-height: 1;
+    letter-spacing: -0.05em;
+    background: linear-gradient(180deg, rgba(240, 170, 255, 0.9), rgba(255, 45, 85, 0.15));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .step h3 {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 16px 0 8px;
+  }
+  .step p {
+    color: var(--muted);
+    max-width: 30ch;
+  }
+  .model {
+    margin-top: 44px;
+    color: var(--muted);
+    max-width: 70ch;
+  }
+
+  /* Why */
+  .why {
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+  .why > div:first-child {
+    display: grid;
+    gap: 20px;
+    justify-items: start;
+  }
+  .cmp {
+    padding: 8px;
+  }
+  .cmp__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .cmp__row + .cmp__row {
+    border-top: 1px solid var(--line);
+  }
+  .cmp__row > span {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 16px 18px;
+    font-size: 0.93rem;
+  }
+  .cmp__row > span :global(svg) {
+    flex: none;
+    margin-top: 3px;
+  }
+  .cmp__head > span {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .cmp__head > span:last-child {
+    color: var(--accent-hi);
+  }
+  .cmp__no {
+    color: var(--muted);
+  }
+  .cmp__no :global(svg) {
+    color: var(--faint);
+  }
+  .cmp__yes {
+    color: var(--ink);
+    background: rgba(214, 70, 255, 0.06);
+  }
+  .cmp__yes :global(svg) {
+    color: var(--ev-verified);
+  }
+  .cmp__row > span:last-child {
+    border-left: 1px solid var(--line);
+  }
+
+  /* Final CTA */
+  .final__box {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: 20px;
+    padding: clamp(56px, 9vw, 110px) 24px;
+    border-radius: 32px;
+    background:
+      radial-gradient(60% 80% at 50% 120%, rgba(214, 70, 255, 0.35), transparent 70%),
+      radial-gradient(40% 60% at 80% 0%, rgba(255, 45, 85, 0.2), transparent 70%),
+      rgba(10, 13, 24, 0.8);
+  }
+  .final__box h2 {
+    max-width: 16ch;
+  }
+  .final__box > * {
+    position: relative;
+  }
+  .final__rings {
+    position: absolute !important;
+    left: 50%;
+    bottom: -70%;
+    width: min(900px, 140%);
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background:
+      conic-gradient(from 0deg, rgba(240, 170, 255, 0.3), transparent 18%),
+      repeating-radial-gradient(circle, transparent 0 11.800%, rgba(240, 170, 255, 0.16) 12% 12.200%);
+    animation: spin 14s linear infinite;
+    mask-image: radial-gradient(circle, #000 30%, transparent 70%);
+  }
+  @keyframes spin {
+    to {
+      transform: translateX(-50%) rotate(360deg);
+    }
+  }
+
+  @media (max-width: 1100px) {
+    .cats {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (max-width: 900px) {
+    .pillars,
+    .steps,
+    .why {
+      grid-template-columns: 1fr;
+    }
+    .steps {
+      border-top: 0;
+      border-left: 1px solid var(--line-strong);
+    }
+    .step,
+    .step + .step {
+      padding: 0 0 36px 28px;
+      border-left: 0;
+    }
+    .step::before,
+    .step + .step::before {
+      top: 6px;
+      left: -5px;
+    }
+  }
+  @media (max-width: 640px) {
+    .cats {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .cat {
+      min-height: 0;
+      padding: 16px;
+    }
+    .cat__desc {
+      display: none;
+    }
+    .cat__go {
+      display: none;
+    }
+    .cmp__row > span {
+      padding: 12px;
+      font-size: 0.85rem;
+    }
+  }
+</style>

@@ -1,0 +1,69 @@
+---
+import Base from '../../layouts/Base.astro';
+import NicheCard from '../../components/NicheCard.astro';
+import CatalogBar from '../../components/CatalogBar.astro';
+import EmptyState from '../../components/EmptyState.astro';
+import Notice from '../../components/Notice.astro';
+import { niches } from '../../data/niches';
+
+const allDemo = niches.every((n) => n.status === 'demo');
+const sorted = [...niches].sort((a, b) => a.order - b.order);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  name: 'Premium YouTube Niches',
+  url: 'https://youtuberadar.com/niches/',
+};
+---
+
+<Base
+  title="Premium YouTube Niches"
+  description="Browse curated YouTube niches by category. Each record separates verified facts, estimates and editorial assessment, with sources and a research date."
+  schema={schema}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">Niches</span>
+      </nav>
+      <h1>Premium <span class="grad">niches</span></h1>
+      <p class="lede">
+        A curated library, organised by category. Search it, filter it, and open any record to see how
+        the niche breaks down.
+      </p>
+    </div>
+  </section>
+
+  <section class="wrap" data-catalog data-noun="niche" style="padding-bottom: 80px">
+    {
+      allDemo && (
+        <div style="margin-bottom: 20px">
+          <Notice>
+            <strong>Demonstration records.</strong> The niches below show how a YouTube Radar record is
+            structured. They contain editorial framing only and no statistics. Measured research, with
+            sources and dates, replaces the “pending” slots when each niche is published.
+          </Notice>
+        </div>
+      )
+    }
+
+    <CatalogBar placeholder="Search niches, e.g. “history” or “fraud”" />
+
+    <div class="card-grid" data-grid>
+      {sorted.map((n, i) => <NicheCard niche={n} i={i} />)}
+    </div>
+
+    <EmptyState title="Nothing on the radar for that search">
+      No niche matches those filters yet. Some categories are still in research.
+    </EmptyState>
+
+    <noscript>
+      <p class="muted" style="margin-top:16px">Search and filters need JavaScript. All niches are listed above.</p>
+    </noscript>
+  </section>
+
+  <script>
+    import '../../scripts/catalog.ts';
+  </script>
+</Base>

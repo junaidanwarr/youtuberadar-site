@@ -1,0 +1,94 @@
+---
+/**
+ * Access call-to-action for a niche or template.
+ * Renders an honest "not connected" state until a real AccessProvider exists.
+ */
+import { commerceLive } from '../lib/access';
+
+interface Props {
+  kind: 'niche' | 'template';
+  name: string;
+  demo: boolean;
+}
+const { kind, name, demo } = Astro.props;
+---
+
+<aside class="access glass" aria-labelledby="access-h">
+  <span class="eyebrow">Access</span>
+  <h2 id="access-h">{demo ? `This ${kind} is a demonstration record` : `Get “${name}”`}</h2>
+
+  {
+    demo ? (
+      <p class="muted">
+        Nothing is for sale on this page. It shows the structure a published {kind} will follow.
+      </p>
+    ) : commerceLive ? (
+      <p class="muted">Choose how you would like to access this {kind}.</p>
+    ) : (
+      <p class="muted">Checkout is not connected yet, so this {kind} cannot be purchased at the moment.</p>
+    )
+  }
+
+  <ul class="access__list">
+    <li>You receive the {kind === 'niche' ? 'research file and its sources' : 'template files listed above'}.</li>
+    <li>You plan, produce and publish independently.</li>
+    <li>No coaching, production, consulting or support is included.</li>
+    <li>No views, earnings or results are guaranteed.</li>
+  </ul>
+
+  <div class="access__cta">
+    <a class="btn btn--primary" href="/access/">See access options <span class="arrow" aria-hidden="true">→</span></a>
+    <button class="btn btn--ghost" type="button" disabled aria-describedby="access-note">
+      {commerceLive && !demo ? 'Buy now' : 'Purchase unavailable'}
+    </button>
+  </div>
+  <p class="access__note mono" id="access-note">
+    {demo ? 'Demo record · not purchasable' : commerceLive ? '' : 'Payments not yet connected'}
+  </p>
+</aside>
+
+<style>
+  .access {
+    display: grid;
+    gap: 16px;
+    padding: clamp(24px, 4vw, 40px);
+    background:
+      radial-gradient(70% 90% at 100% 0%, rgba(255, 45, 85, 0.18), transparent 70%),
+      radial-gradient(70% 90% at 0% 100%, rgba(214, 70, 255, 0.2), transparent 70%),
+      rgba(10, 13, 24, 0.8);
+  }
+  .access h2 {
+    font-size: clamp(1.5rem, 3vw, 2.1rem);
+  }
+  .access__list {
+    display: grid;
+    gap: 8px;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .access__list li {
+    padding-left: 22px;
+    position: relative;
+  }
+  .access__list li::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 0.62em;
+    width: 8px;
+    height: 1.5px;
+    background: var(--accent-hi);
+  }
+  .access__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .access__note {
+    color: var(--ev-estimate);
+    text-transform: uppercase;
+    font-size: 0.66rem;
+    letter-spacing: 0.12em;
+  }
+</style>

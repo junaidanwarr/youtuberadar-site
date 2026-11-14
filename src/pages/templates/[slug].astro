@@ -1,0 +1,217 @@
+---
+import Base from '../../layouts/Base.astro';
+import Notice from '../../components/Notice.astro';
+import TemplatePreview from '../../components/TemplatePreview.astro';
+import AccessPanel from '../../components/AccessPanel.astro';
+import NicheCard from '../../components/NicheCard.astro';
+import { templates } from '../../data/templates';
+import { niches } from '../../data/niches';
+import { categoryBySlug } from '../../data/categories';
+import type { Template } from '../../data/types';
+
+export function getStaticPaths() {
+  return templates.map((template) => ({ params: { slug: template.slug }, props: { template } }));
+}
+interface Props {
+  template: Template;
+}
+const { template: t } = Astro.props;
+const demo = t.status === 'demo';
+const cats = t.categories.map(categoryBySlug).filter((c) => !!c);
+const usedBy = niches.filter((n) => n.relatedTemplates.includes(t.slug));
+const tbc = demo ? ' (indicative)' : '';
+---
+
+<Base title={`${t.name} — Editing template`} description={t.description} noindex={demo}>
+  <article style={`--hue:${t.hue}`}>
+    <header class="page-head td-head">
+      <div class="wrap td-grid">
+        <div>
+          <nav class="crumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a><span aria-hidden="true">/</span>
+            <a href="/templates/">Templates</a>
+          </nav>
+          <h1>{t.name}</h1>
+          <p class="lede">{t.description}</p>
+          <div class="td-meta">
+            <span class="pill">{t.style}</span>
+            <span class="pill">{t.format}</span>
+            {demo && <span class="pill pill--demo"><span class="dot" />Demo record</span>}
+          </div>
+        </div>
+        <div class="td-preview tilt glass" data-tilt="6">
+          <TemplatePreview kind={t.preview} hue={t.hue} />
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap td-body">
+      {
+        demo && (
+          <Notice>
+            <strong>Demonstration record.</strong> The preview is an illustration of the concept, not a
+            screenshot of a finished file. Details below are indicative and are confirmed at publication.
+          </Notice>
+        )
+      }
+
+      <dl class="spec">
+        <div class="glass">
+          <dt>Intended use</dt>
+          <dd>{t.intendedUse}</dd>
+        </div>
+        <div class="glass">
+          <dt>Compatible software{tbc}</dt>
+          <dd><ul class="tags">{t.software.map((s) => <li>{s}</li>)}</ul></dd>
+        </div>
+        <div class="glass">
+          <dt>Included resources{tbc}</dt>
+          <dd><ul class="bullets">{t.includes.map((s) => <li>{s}</li>)}</ul></dd>
+        </div>
+        <div class="glass">
+          <dt>File formats{tbc}</dt>
+          <dd><ul class="tags">{t.fileFormats.map((s) => <li class="mono">{s}</li>)}</ul></dd>
+        </div>
+        <div class="glass">
+          <dt>Content categories</dt>
+          <dd>
+            <ul class="tags">
+              {cats.map((c) => <li><a href={`/templates/?category=${c!.slug}`}>{c!.name}</a></li>)}
+            </ul>
+          </dd>
+        </div>
+        <div class="glass">
+          <dt>What you need</dt>
+          <dd>
+            A licensed copy of the editing software and working knowledge of it. Installation help and
+            technical assistance are not provided.
+          </dd>
+        </div>
+      </dl>
+
+      {
+        usedBy.length > 0 && (
+          <section class="td-sec">
+            <h2>Niches this template suits</h2>
+            <div class="card-grid">{usedBy.map((n, i) => <NicheCard niche={n} i={i} />)}</div>
+          </section>
+        )
+      }
+
+      <AccessPanel kind="template" name={t.name} demo={demo} />
+    </div>
+  </article>
+</Base>
+
+<style>
+  .td-head::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 560px;
+    z-index: -1;
+    background: radial-gradient(50% 100% at 80% 0%, hsla(var(--hue), 90%, 55%, 0.2), transparent 70%);
+  }
+  .td-head {
+    position: relative;
+  }
+  .td-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  .td-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .td-preview {
+    padding: 12px;
+    border-radius: 24px;
+    box-shadow: 0 40px 100px -30px hsla(var(--hue), 90%, 50%, 0.5);
+  }
+  .td-body {
+    display: grid;
+    gap: 32px;
+    padding-bottom: 80px;
+  }
+  .spec {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 0;
+  }
+  .spec > div {
+    padding: 22px;
+    border-radius: 18px;
+  }
+  .spec dt {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .spec dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.95rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .tags li {
+    padding: 4px 11px;
+    border-radius: 7px;
+    border: 1px solid var(--line-strong);
+    background: rgba(255, 255, 255, 0.04);
+    font-size: 0.84rem;
+  }
+  .tags a:hover {
+    color: var(--accent-hi);
+  }
+  .bullets {
+    display: grid;
+    gap: 6px;
+  }
+  .bullets li {
+    padding-left: 16px;
+    position: relative;
+  }
+  .bullets li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.6em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: hsl(var(--hue), 85%, 70%);
+  }
+  .td-sec {
+    display: grid;
+    gap: 20px;
+  }
+  .td-sec h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 400;
+  }
+  @media (max-width: 900px) {
+    .td-grid {
+      grid-template-columns: 1fr;
+    }
+    .spec {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .spec {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

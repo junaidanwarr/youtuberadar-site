@@ -1,0 +1,195 @@
+---
+import Logo from './Logo.astro';
+
+const links = [
+  { href: '/niches/', label: 'Niches' },
+  { href: '/templates/', label: 'Templates' },
+  { href: '/about/', label: 'About' },
+  { href: '/faq/', label: 'FAQ' },
+];
+const path = Astro.url.pathname;
+const isActive = (href: string) => path.startsWith(href);
+---
+
+<header class="nav" data-nav>
+  <div class="wrap nav__inner">
+    <a class="nav__brand" href="/" aria-label="YouTube Radar home">
+      <Logo />
+      <span>YouTube <b>Radar</b></span>
+    </a>
+
+    <nav class="nav__menu" data-nav-menu id="site-menu" aria-label="Primary">
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <a class="btn btn--primary btn--sm nav__cta" href="/access/">Get access</a>
+    </nav>
+
+    <button
+      class="nav__toggle"
+      data-nav-toggle
+      aria-expanded="false"
+      aria-controls="site-menu"
+      aria-label="Menu"
+    >
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: 50;
+    transition:
+      background 0.3s,
+      border-color 0.3s,
+      backdrop-filter 0.3s;
+    border-bottom: 1px solid transparent;
+  }
+  .nav.is-scrolled {
+    background: rgba(4, 5, 10, 0.72);
+    backdrop-filter: blur(18px) saturate(150%);
+    border-color: var(--line);
+  }
+  .nav__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+  }
+  .nav__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    position: relative;
+    z-index: 2;
+  }
+  .nav__brand b {
+    font-weight: 600;
+  }
+  .nav__menu {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .nav__menu ul {
+    display: flex;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(12, 15, 26, 0.55);
+    backdrop-filter: blur(12px);
+  }
+  .nav__menu ul a {
+    display: block;
+    padding: 7px 16px;
+    border-radius: 999px;
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    transition:
+      color 0.2s,
+      background 0.2s;
+  }
+  .nav__menu ul a:hover {
+    color: #fff;
+  }
+  .nav__menu ul a[aria-current='page'] {
+    color: #fff;
+    background: rgba(214, 70, 255, 0.2);
+  }
+  .nav__toggle {
+    display: none;
+    position: relative;
+    z-index: 2;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    border: 1px solid var(--line-strong);
+    background: rgba(12, 15, 26, 0.6);
+    cursor: pointer;
+    place-items: center;
+    align-content: center;
+    gap: 6px;
+  }
+  .nav__toggle span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.3s var(--ease);
+  }
+  .nav__toggle[aria-expanded='true'] span:first-child {
+    transform: translateY(3.75px) rotate(45deg);
+  }
+  .nav__toggle[aria-expanded='true'] span:last-child {
+    transform: translateY(-3.75px) rotate(-45deg);
+  }
+
+  @media (max-width: 899.98px) {
+    .nav__toggle {
+      display: grid;
+    }
+    .nav__menu {
+      position: fixed;
+      inset: 0;
+      flex-direction: column;
+      align-items: stretch;
+      justify-content: center;
+      gap: 32px;
+      padding: 96px var(--gutter) 40px;
+      background: rgba(4, 5, 10, 0.96);
+      backdrop-filter: blur(20px);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-12px);
+      transition:
+        opacity 0.3s,
+        transform 0.4s var(--ease),
+        visibility 0.3s;
+    }
+    .nav__menu.is-open {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+    }
+    .nav__menu ul {
+      flex-direction: column;
+      border: 0;
+      background: none;
+      padding: 0;
+      gap: 0;
+      backdrop-filter: none;
+    }
+    .nav__menu ul a {
+      padding: 16px 4px;
+      border-radius: 0;
+      border-bottom: 1px solid var(--line);
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 300;
+      color: var(--ink);
+    }
+    .nav__menu ul a[aria-current='page'] {
+      background: none;
+      color: var(--accent-hi);
+    }
+    .nav__cta {
+      min-height: 52px;
+    }
+  }
+</style>

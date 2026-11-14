@@ -1,0 +1,174 @@
+---
+import Base from '../layouts/Base.astro';
+import { allSoftware } from '../data/templates';
+
+const faqs: { q: string; a: string }[] = [
+  {
+    q: 'What is YouTube Radar?',
+    a: 'YouTube Radar is a self-service platform that provides curated, research-led YouTube niches and professional editing templates. You choose the resources you want and use them to build your own content independently.',
+  },
+  {
+    q: 'What are premium YouTube niches?',
+    a: 'A premium niche is a clearly defined content opportunity that has been selected, framed and broken down for you, instead of a bare topic or keyword. “Premium” describes the care taken in curation and research. It is not a prediction of how any channel will perform.',
+  },
+  {
+    q: 'What information is included with each niche?',
+    a: 'Where applicable: a niche overview, target audience, sub-niche breakdown, content opportunities, format recommendations, a competition assessment, audience demand indicators, monetisation considerations, relevant examples, and the research date with supporting sources. Every statement is labelled as verified, an estimate, an editorial assessment or pending, so you can see what is fact and what is judgement.',
+  },
+  {
+    q: 'What editing templates are available?',
+    a: 'The library is organised by content category, video format, editing style, software and intended use. It covers systems such as timelines, sourced lower thirds, animated charts, maps, archive treatments, counters, tier structures, title sequences and vertical captions. The entries currently shown are demonstration records describing the planned range.',
+  },
+  {
+    q: 'Which editing software is supported?',
+    a: `Compatibility is listed on each template’s page, because it differs from template to template. The planned range targets ${allSoftware.join(', ')}. These are indicative until each template is published, so check the individual page before you rely on it.`,
+  },
+  {
+    q: 'Does YouTube Radar provide coaching?',
+    a: 'No. There is no personalised coaching, mentoring or individual consulting. YouTube Radar provides resources; how you use them is up to you.',
+  },
+  {
+    q: 'Is video production included?',
+    a: 'No. YouTube Radar does not script, edit, voice, produce or publish videos for you, and it does not manage channels. Templates are tools for your own editing.',
+  },
+  {
+    q: 'Does YouTube Radar provide customer support?',
+    a: 'No. The platform is self-service and does not offer ongoing customer support or technical assistance, including help installing or using editing software. Each resource is described in detail up front so you can decide whether it suits you before you access it.',
+  },
+  {
+    q: 'Are YouTube earnings guaranteed?',
+    a: 'No. Nothing is guaranteed: not earnings, views, subscribers, monetisation approval or growth. Results depend on your execution, your consistency, YouTube’s own policies and many factors outside anyone’s control. Any figures that appear in a niche are labelled as verified data or estimates and are never promises.',
+  },
+  {
+    q: 'How do I know the research is accurate?',
+    a: 'Published niches record their research date and sources, and each statement carries an evidence label. We do not invent statistics. Where reliable evidence is not available, the page says so. Research also ages, so always check the date.',
+  },
+  {
+    q: 'Is YouTube Radar affiliated with YouTube?',
+    a: 'No. YouTube Radar is an independent service and is not affiliated with, endorsed by or sponsored by YouTube or Google.',
+  },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base
+  title="FAQ"
+  description="Straight answers about YouTube Radar: what is included, which software is supported, and what is not provided or guaranteed."
+  schema={schema}
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">FAQ</span>
+      </nav>
+      <h1>Straight <span class="grad">answers</span></h1>
+      <p class="lede">What YouTube Radar is, what you receive, and where its responsibility ends.</p>
+    </div>
+  </section>
+
+  <section class="wrap faq">
+    {
+      faqs.map((f, i) => (
+        <details class="faq__item reveal" style={`--i:${i % 4}`} name="faq">
+          <summary>
+            <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+            <h2>{f.q}</h2>
+            <span class="faq__icon" aria-hidden="true" />
+          </summary>
+          <p>{f.a}</p>
+        </details>
+      ))
+    }
+  </section>
+
+  <section class="wrap" style="padding:56px 0 90px;display:flex;flex-wrap:wrap;gap:12px">
+    <a class="btn btn--primary" href="/niches/">Explore premium niches <span class="arrow" aria-hidden="true">→</span></a>
+    <a class="btn btn--ghost" href="/access/">See access options</a>
+  </section>
+</Base>
+
+<style>
+  .faq {
+    max-width: 900px;
+  }
+  .faq__item {
+    border-top: 1px solid var(--line);
+  }
+  .faq__item:last-of-type {
+    border-bottom: 1px solid var(--line);
+  }
+  .faq__item summary {
+    display: grid;
+    grid-template-columns: 44px 1fr 28px;
+    align-items: center;
+    gap: 8px;
+    padding: 24px 0;
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq__item summary .mono {
+    color: var(--faint);
+  }
+  .faq__item h2 {
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    transition: color 0.2s;
+  }
+  .faq__item summary:hover h2,
+  .faq__item[open] h2 {
+    color: var(--accent-hi);
+  }
+  .faq__icon {
+    position: relative;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+  }
+  .faq__icon::before,
+  .faq__icon::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 10px;
+    height: 1.5px;
+    background: var(--ink);
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s var(--ease);
+  }
+  .faq__icon::after {
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+  .faq__item[open] .faq__icon::after {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  .faq__item p {
+    padding: 0 36px 28px 52px;
+    color: var(--ink-soft);
+    max-width: 72ch;
+    line-height: 1.7;
+  }
+  @media (max-width: 560px) {
+    .faq__item summary {
+      grid-template-columns: 32px 1fr 28px;
+    }
+    .faq__item p {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
+</style>

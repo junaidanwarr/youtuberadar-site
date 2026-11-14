@@ -1,0 +1,12 @@
+---
+import Glyph from './Glyph.astro';
+interface Props {
+  tone?: 'demo' | 'info';
+}
+const { tone = 'demo' } = Astro.props;
+---
+
+<aside class:list={['notice', tone === 'info' && 'notice--info']} role="note">
+  <span class="notice__icon"><Glyph name="info" size={22} /></span>
+  <div><slot /></div>
+</aside>

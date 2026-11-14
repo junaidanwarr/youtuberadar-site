@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import Glyph from '../components/Glyph.astro';
+import EvidenceLegend from '../components/EvidenceLegend.astro';
+
+const provides = [
+  'Curated niche research files',
+  'Sub-niche, format and content-idea breakdowns',
+  'Sources and research dates',
+  'Professional editing templates',
+];
+const doesNot = [
+  'Personalised coaching or consulting',
+  'Done-for-you video production',
+  'Channel management',
+  'Technical assistance or ongoing support',
+  'Guarantees of views, earnings or growth',
+];
+const standards = [
+  ['Sources first', 'Claims are tied to credible, relevant sources. Health topics lean on medical and scientific literature; crime and celebrity topics on court records and established reporting.'],
+  ['Dated research', 'Every published record carries the date its research was done, so nothing old is passed off as current.'],
+  ['No invented numbers', 'We do not manufacture statistics, audience figures, revenue estimates, competition scores or trends. If we cannot support a number, it is not shown.'],
+  ['Estimates stay estimates', 'Anything derived rather than measured is labelled as an estimate, with the method stated.'],
+  ['Limits stated plainly', 'Where reliable evidence is unavailable, the page says so instead of filling the gap.'],
+  ['No promised outcomes', 'An opportunity is never described as guaranteed. What happens with a niche depends on execution.'],
+];
+---
+
+<Base
+  title="About YouTube Radar"
+  description="YouTube Radar focuses on premium niche discovery and professional editing resources for creators who execute independently."
+>
+  <section class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span><span aria-current="page">About</span>
+      </nav>
+      <h1 style="max-width:17ch">We Believe Better Content Starts With <span class="grad">Better Direction.</span></h1>
+      <p class="lede">
+        YouTube Radar does two things: it curates premium YouTube niches, and it builds professional
+        editing resources to go with them. Everything after that is yours.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:40px">
+    <div class="wrap prose-grid">
+      <div class="reveal">
+        <span class="eyebrow">Philosophy</span>
+        <h2>No random niches. No vague research.</h2>
+      </div>
+      <div class="prose reveal">
+        <p>
+          Choosing what to make is the decision every other decision depends on. It is also the one most
+          often made on a hunch, a trending keyword or a number with no source behind it.
+        </p>
+        <p>
+          We take the slower route. A niche earns a place here only when it can be defined clearly,
+          broken into workable sub-niches and supported with evidence a reader can check. The library is
+          meant to stay small and to be trusted.
+        </p>
+        <p>
+          The same thinking shapes the template library. Templates are organised around the kinds of
+          video each niche actually calls for, so the research and the edit point in the same direction.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="model-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Independent execution</span>
+        <h2 id="model-title">We provide the resources. You execute the vision.</h2>
+        <p class="lede">
+          YouTube Radar is a self-service platform. You get access to the niches and templates you
+          choose, and you build your channel on your own terms and your own schedule.
+        </p>
+      </div>
+      <div class="split">
+        <div class="glass split__col reveal">
+          <h3><Glyph name="check" size={20} /> What we provide</h3>
+          <ul>{provides.map((x) => <li>{x}</li>)}</ul>
+        </div>
+        <div class="glass split__col split__col--no reveal" style="--i:1">
+          <h3><Glyph name="cross" size={20} /> What we do not provide</h3>
+          <ul>{doesNot.map((x) => <li>{x}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="standards" aria-labelledby="std-title">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Research standards</span>
+        <h2 id="std-title">Accuracy is the product.</h2>
+      </div>
+      <div class="std">
+        <ol class="std__list">
+          {
+            standards.map(([h, p], i) => (
+              <li class="reveal" style={`--i:${i % 3}`}>
+                <span class="mono">{String(i + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3>{h}</h3>
+                  <p>{p}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+        <aside class="glass std__legend reveal">
+          <h3>Evidence labels</h3>
+          <p class="muted">Every statement on a niche page carries one of four labels.</p>
+          <EvidenceLegend />
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="wrap" style="display:flex;flex-wrap:wrap;gap:12px">
+      <a class="btn btn--primary" href="/niches/">Explore premium niches <span class="arrow" aria-hidden="true">→</span></a>
+      <a class="btn btn--ghost" href="/faq/">Read the FAQ</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .prose-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: clamp(28px, 6vw, 90px);
+  }
+  .prose-grid h2 {
+    margin-top: 18px;
+  }
+  .prose {
+    display: grid;
+    gap: 20px;
+    color: var(--ink-soft);
+    font-size: 1.08rem;
+    line-height: 1.7;
+  }
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+  .split__col {
+    padding: 30px;
+  }
+  .split__col h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--ev-verified);
+    margin-bottom: 18px;
+  }
+  .split__col--no h3 {
+    color: var(--muted);
+  }
+  .split__col li {
+    padding: 13px 0;
+    border-top: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .split__col--no li {
+    color: var(--muted);
+  }
+  .std {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+  }
+  .std__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+  }
+  .std__list li {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+  }
+  .std__list .mono {
+    color: var(--accent-hi);
+    padding-top: 4px;
+  }
+  .std__list h3 {
+    margin-bottom: 6px;
+  }
+  .std__list p {
+    color: var(--muted);
+    max-width: 60ch;
+  }
+  .std__legend {
+    padding: 26px;
+    display: grid;
+    gap: 16px;
+    position: sticky;
+    top: 100px;
+  }
+  @media (max-width: 900px) {
+    .prose-grid,
+    .split,
+    .std {
+      grid-template-columns: 1fr;
+    }
+    .std__legend {
+      position: static;
+    }
+  }
+</style>

@@ -1,0 +1,375 @@
+---
+import Base from '../../layouts/Base.astro';
+import Glyph from '../../components/Glyph.astro';
+import Notice from '../../components/Notice.astro';
+import TemplateCard from '../../components/TemplateCard.astro';
+import AccessPanel from '../../components/AccessPanel.astro';
+import EvidenceLegend from '../../components/EvidenceLegend.astro';
+import { niches } from '../../data/niches';
+import { categoryBySlug } from '../../data/categories';
+import { templateBySlug } from '../../data/templates';
+import type { Niche } from '../../data/types';
+
+export function getStaticPaths() {
+  return niches.map((niche) => ({ params: { slug: niche.slug }, props: { niche } }));
+}
+
+interface Props {
+  niche: Niche;
+}
+const { niche } = Astro.props;
+const cat = categoryBySlug(niche.category)!;
+const related = niche.relatedTemplates.map(templateBySlug).filter((t) => !!t);
+const demo = niche.status === 'demo';
+
+const toc = [
+  { id: 'introduction', title: 'Introduction' },
+  ...niche.sections.map((s) => ({ id: s.id, title: s.title })),
+  { id: 'evidence', title: 'Research and evidence' },
+  { id: 'templates', title: 'Relevant editing templates' },
+  { id: 'access', title: 'Access' },
+];
+
+const counts = niche.sections
+  .flatMap((s) => s.statements)
+  .reduce<Record<string, number>>((a, s) => ((a[s.evidence] = (a[s.evidence] ?? 0) + 1), a), {});
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Niches', item: 'https://youtuberadar.com/niches/' },
+    { '@type': 'ListItem', position: 2, name: niche.title, item: `https://youtuberadar.com/niches/${niche.slug}/` },
+  ],
+};
+---
+
+<Base title={`${niche.title} — ${cat.name} niche`} description={niche.summary} schema={schema} noindex={demo}>
+  <article style={`--hue:${cat.hue}`}>
+    <header class="page-head nd-head">
+      <div class="wrap">
+        <nav class="crumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a><span aria-hidden="true">/</span>
+          <a href="/niches/">Niches</a><span aria-hidden="true">/</span>
+          <a href={`/niches/?category=${cat.slug}`}>{cat.name}</a>
+        </nav>
+        <h1>{niche.title}</h1>
+        <p class="lede">{niche.summary}</p>
+        <div class="nd-meta">
+          <span class="pill" style="color:hsl(var(--hue),85%,78%)"><Glyph name={cat.glyph} size={14} />{cat.name}</span>
+          {
+            demo ? (
+              <span class="pill pill--demo"><span class="dot" />Demo record</span>
+            ) : (
+              <span class="pill"><span class="dot" />Published</span>
+            )
+          }
+          <span class="pill">
+            Research date: {niche.researchDate ? <time datetime={niche.researchDate}>{niche.researchDate}</time> : 'not yet recorded'}
+          </span>
+        </div>
+      </div>
+    </header>
+
+    <div class="wrap nd-layout">
+      <aside class="nd-side">
+        <nav class="nd-toc glass" aria-label="On this page">
+          <h2 class="mono">On this page</h2>
+          <ol>
+            {toc.map((t, i) => <li><a href={`#${t.id}`}><span>{String(i + 1).padStart(2, '0')}</span>{t.title}</a></li>)}
+          </ol>
+        </nav>
+        <div class="nd-legend glass">
+          <h2 class="mono">How to read this page</h2>
+          <EvidenceLegend />
+        </div>
+      </aside>
+
+      <div class="nd-body">
+        {
+          demo && (
+            <Notice>
+              <strong>Demonstration record.</strong> This page shows the structure of a YouTube Radar
+              niche. It contains editorial framing and no measured data. Slots marked “pending” are
+              filled only with sourced, dated research.
+            </Notice>
+          )
+        }
+        {cat.sourcingNote && <Notice tone="info"><strong>Sourcing note.</strong> {cat.sourcingNote}</Notice>}
+
+        <section id="introduction" class="nd-sec">
+          <h2><span class="nd-num">01</span>Introduction</h2>
+          <p class="nd-intro">{niche.intro}</p>
+        </section>
+
+        {
+          niche.sections.map((sec, i) => (
+            <section id={sec.id} class="nd-sec">
+              <h2><span class="nd-num">{String(i + 2).padStart(2, '0')}</span>{sec.title}</h2>
+              <ul class="stmts">
+                {sec.statements.map((st) => (
+                  <li class={`stmt stmt--${st.evidence}`}>
+                    <span class={`ev ev--${st.evidence}`}>{st.evidence}</span>
+                    <p>
+                      {st.text}
+                      {st.source !== undefined && niche.sources[st.source] && (
+                        <a class="stmt__src" href={`#src-${st.source + 1}`}>[{st.source + 1}]</a>
+                      )}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ))
+        }
+
+        <section id="evidence" class="nd-sec">
+          <h2><span class="nd-num">{String(niche.sections.length + 2).padStart(2, '0')}</span>Research and evidence</h2>
+          <dl class="ev-summary glass">
+            {
+              (['verified', 'estimate', 'editorial', 'pending'] as const).map((k) => (
+                <div>
+                  <dt><span class={`ev ev--${k}`}>{k}</span></dt>
+                  <dd>{counts[k] ?? 0}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <p class="muted">
+            {
+              demo
+                ? 'No measured research has been recorded for this niche. The links below are primary YouTube policy pages provided for reference; they have not been summarised or dated here.'
+                : `Sources checked on ${niche.researchDate}.`
+            }
+          </p>
+          <ol class="sources">
+            {
+              niche.sources.map((s, i) => (
+                <li id={`src-${i + 1}`}>
+                  <a class="textlink" href={s.url} target="_blank" rel="noopener noreferrer">{s.label}</a>
+                  {s.checked && <span class="mono muted"> · checked {s.checked}</span>}
+                </li>
+              ))
+            }
+          </ol>
+        </section>
+
+        <section id="templates" class="nd-sec">
+          <h2><span class="nd-num">{String(niche.sections.length + 3).padStart(2, '0')}</span>Relevant editing templates</h2>
+          {
+            related.length ? (
+              <div class="card-grid">{related.map((t, i) => <TemplateCard template={t!} i={i} />)}</div>
+            ) : (
+              <p class="muted">No templates are matched to this niche yet. <a class="textlink" href="/templates/">Browse the library</a>.</p>
+            )
+          }
+        </section>
+
+        <section id="access" class="nd-sec">
+          <AccessPanel kind="niche" name={niche.title} demo={demo} />
+        </section>
+      </div>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .nd-head {
+    position: relative;
+  }
+  .nd-head::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 520px;
+    z-index: -1;
+    background: radial-gradient(60% 100% at 20% 0%, hsla(var(--hue), 90%, 55%, 0.2), transparent 70%);
+  }
+  .nd-head h1 {
+    max-width: 20ch;
+  }
+  .nd-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 26px;
+  }
+  .nd-layout {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 64px);
+    padding-bottom: 80px;
+    align-items: start;
+  }
+  .nd-side {
+    position: sticky;
+    top: 96px;
+    display: grid;
+    gap: 16px;
+  }
+  .nd-toc,
+  .nd-legend {
+    padding: 20px;
+    border-radius: 18px;
+  }
+  .nd-side h2 {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+    margin-bottom: 14px;
+  }
+  .nd-toc ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .nd-toc a {
+    display: flex;
+    gap: 12px;
+    padding: 6px 8px;
+    margin-inline: -8px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    transition:
+      background 0.2s,
+      color 0.2s;
+  }
+  .nd-toc a:hover {
+    background: rgba(214, 70, 255, 0.12);
+    color: #fff;
+  }
+  .nd-toc a span {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--faint);
+    padding-top: 2px;
+  }
+  .nd-body {
+    display: grid;
+    gap: 22px;
+    min-width: 0;
+  }
+  .nd-sec {
+    padding-top: 30px;
+    display: grid;
+    gap: 20px;
+  }
+  .nd-sec > h2 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 400;
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .nd-num {
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.1em;
+    color: hsl(var(--hue), 85%, 74%);
+  }
+  .nd-intro {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 68ch;
+  }
+  .stmts {
+    display: grid;
+    gap: 10px;
+  }
+  .stmt {
+    display: grid;
+    grid-template-columns: 104px 1fr;
+    gap: 16px;
+    align-items: start;
+    padding: 16px 18px;
+    border-radius: var(--radius);
+    border: 1px solid var(--line);
+    background: rgba(12, 15, 26, 0.6);
+  }
+  .stmt .ev {
+    justify-self: start;
+    margin-top: 3px;
+  }
+  .stmt p {
+    color: var(--ink-soft);
+  }
+  .stmt--pending {
+    border-style: dashed;
+    background: transparent;
+  }
+  .stmt--pending p {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .stmt__src {
+    margin-left: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
+    color: var(--accent-hi);
+  }
+  .ev-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin: 0;
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .ev-summary div {
+    padding: 16px 18px;
+    border-right: 1px solid var(--line);
+  }
+  .ev-summary div:last-child {
+    border: 0;
+  }
+  .ev-summary dd {
+    margin: 10px 0 0;
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 300;
+    line-height: 1;
+  }
+  .sources {
+    display: grid;
+    gap: 10px;
+    padding-left: 22px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.94rem;
+  }
+
+  @media (max-width: 980px) {
+    .nd-layout {
+      grid-template-columns: 1fr;
+    }
+    .nd-side {
+      position: static;
+    }
+    .nd-toc {
+      display: none;
+    }
+  }
+  @media (max-width: 560px) {
+    .stmt {
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .ev-summary {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .ev-summary div:nth-child(2) {
+      border-right: 0;
+    }
+    .ev-summary div:nth-child(-n + 2) {
+      border-bottom: 1px solid var(--line);
+    }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<div class="empty glass" data-empty hidden>
+  <div class="empty__radar" aria-hidden="true"></div>
+  <h3>{title}</h3>
+  <p class="muted"><slot /></p>
+  <button type="button" class="btn btn--ghost btn--sm" data-reset>Clear filters</button>
+</div>
+
+<style>
+  .empty {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    text-align: center;
+    padding: 64px 24px;
+  }
+  .empty[hidden] {
+    display: none;
+  }
+  .empty__radar {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    background:
+      conic-gradient(from 0deg, rgba(240, 170, 255, 0.5), transparent 25%),
+      repeating-radial-gradient(circle, transparent 0 30%, rgba(240, 170, 255, 0.25) 31% 33%);
+    animation: es-spin 3s linear infinite;
+    margin-bottom: 8px;
+  }
+  @keyframes es-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
