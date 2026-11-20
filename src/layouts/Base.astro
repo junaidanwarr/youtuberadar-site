@@ -15,15 +15,15 @@ interface Props {
 }
 
 const { title, description, schema, noindex = false } = Astro.props;
-const site = Astro.site ?? new URL('https://youtuberadar.com');
+const site = Astro.site ?? new URL('https://utuberadar.com');
 const canonical = new URL(Astro.url.pathname, site).href;
-const fullTitle = title.includes('YouTube Radar') ? title : `${title} — YouTube Radar`;
+const fullTitle = title.includes('Utube Radar') ? title : `${title} — Utube Radar`;
 const ogImage = new URL('/og.svg', site).href;
 
 const orgSchema = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
-  name: 'YouTube Radar',
+  name: 'Utube Radar',
   url: site.href,
   slogan: 'Discover Smarter. Create Better.',
 };
@@ -42,7 +42,7 @@ const schemas = [orgSchema, ...(schema ? (Array.isArray(schema) ? schema : [sche
     {noindex && <meta name="robots" content="noindex" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="YouTube Radar" />
+    <meta property="og:site_name" content="Utube Radar" />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />

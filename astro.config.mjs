@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://youtuberadar.com',
+  site: 'https://utuberadar.com',
   trailingSlash: 'always',
   integrations: [
     sitemap({

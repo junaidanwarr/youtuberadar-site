@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://youtuberadar.com/sitemap-index.xml
+Sitemap: https://utuberadar.com/sitemap-index.xml

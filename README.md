@@ -1,6 +1,6 @@
-# YouTube Radar — website
+# Utube Radar — website
 
-Static, SEO-friendly site for **youtuberadar.com**. Astro + three.js, no UI framework.
+Static, SEO-friendly site for **utuberadar.com**. Astro + three.js, no UI framework.
 
 ```bash
 npm install
@@ -57,7 +57,7 @@ an auth backend), return it from `getAccessProvider()`, and fill `offers` with r
 products and prices. Entitlement checks and downloads need a server or serverless
 functions; switch Astro to an adapter (`@astrojs/vercel`, `@astrojs/cloudflare`, …) for those routes.
 
-## Deploying to youtuberadar.com
+## Deploying to utuberadar.com
 
 The build is plain static files in `dist/`. It works on Vercel (`vercel.json` included),
 Netlify or Cloudflare Pages (`public/_headers` included), or any static host.

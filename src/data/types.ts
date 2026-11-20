@@ -1,5 +1,5 @@
 /**
- * Content model for YouTube Radar.
+ * Content model for Utube Radar.
  *
  * Data-integrity rule: every statement shown on a niche page carries an
  * evidence level. Nothing is rendered as fact unless it is `verified`
